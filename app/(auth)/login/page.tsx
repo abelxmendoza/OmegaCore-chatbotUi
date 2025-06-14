@@ -58,6 +58,7 @@ export default function Page() {
             Use your email and password to sign in
           </p>
         </div>
+
         <AuthForm action={handleSubmit} defaultEmail={email}>
           <SubmitButton isSuccessful={isSuccessful}>Sign in</SubmitButton>
           <p className="text-center text-sm text-gray-600 mt-4 dark:text-zinc-400">
@@ -71,6 +72,17 @@ export default function Page() {
             {' for free.'}
           </p>
         </AuthForm>
+
+        {/* 🎯 Guest Login Button */}
+        <div className="text-center px-4">
+          <p className="text-sm text-gray-500 dark:text-zinc-400 mb-2">or</p>
+          <button
+            onClick={() => router.push('/api/auth/guest?redirectUrl=/chat')}
+            className="w-full bg-gray-100 hover:bg-gray-200 text-black font-medium py-2 px-4 rounded-md dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-white"
+          >
+            Continue as Guest
+          </button>
+        </div>
       </div>
     </div>
   );

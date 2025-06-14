@@ -8,7 +8,7 @@ import {
   updateChatVisiblityById,
 } from '@/lib/db/queries';
 import type { VisibilityType } from '@/components/visibility-selector';
-import { myProvider } from '@/lib/ai/providers';
+import { myProvider } from '@/lib/ai/providers'; // ✅ using custom provider
 
 export async function saveChatModelAsCookie(model: string) {
   const cookieStore = await cookies();
@@ -50,4 +50,18 @@ export async function updateChatVisibility({
   visibility: VisibilityType;
 }) {
   await updateChatVisiblityById({ chatId, visibility });
+}
+
+// ✅ Test function for debugging your OpenAI provider
+export async function testOpenAIProvider() {
+  const { text } = await generateText({
+    model: myProvider.languageModel('title-model'),
+    system: 'You are a helpful assistant.',
+    prompt: JSON.stringify({
+      role: 'user',
+      parts: ['How do I train a robot to clean dishes?'],
+    }),
+  });
+
+  return text;
 }

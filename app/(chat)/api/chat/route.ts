@@ -58,19 +58,15 @@ export async function POST(request: Request) {
     if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
       return new Response(
         'You have exceeded your maximum number of messages for the day! Please try again later.',
-        {
-          status: 429,
-        },
+        { status: 429 },
       );
     }
 
     const chat = await getChatById({ id });
 
     if (!chat) {
-      const title = await generateTitleFromUserMessage({
-        message,
-      });
-
+      const title = await generateTitleFromUserMessage({ message });
+      console.log('[CREATE CHAT]', id, title);
       await saveChat({ id, userId: session.user.id, title });
     } else {
       if (chat.userId !== session.user.id) {
@@ -86,7 +82,8 @@ export async function POST(request: Request) {
       message,
     });
 
-    const { longitude, latitude, city, country } = geolocation(request);
+    const location = await geolocation(request);
+    const { longitude = 0, latitude = 0, city = '', country = '' } = location ?? {};
 
     const requestHints: RequestHints = {
       longitude,
@@ -118,22 +115,14 @@ export async function POST(request: Request) {
           experimental_activeTools:
             selectedChatModel === 'chat-model-reasoning'
               ? []
-              : [
-                  'getWeather',
-                  'createDocument',
-                  'updateDocument',
-                  'requestSuggestions',
-                ],
+              : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions'],
           experimental_transform: smoothStream({ chunking: 'word' }),
           experimental_generateMessageId: generateUUID,
           tools: {
             getWeather,
             createDocument: createDocument({ session, dataStream }),
             updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({
-              session,
-              dataStream,
-            }),
+            requestSuggestions: requestSuggestions({ session, dataStream }),
           },
           onFinish: async ({ response }) => {
             if (session.user?.id) {
@@ -144,9 +133,7 @@ export async function POST(request: Request) {
                   ),
                 });
 
-                if (!assistantId) {
-                  throw new Error('No assistant message found!');
-                }
+                if (!assistantId) throw new Error('No assistant message found!');
 
                 const [, assistantMessage] = appendResponseMessages({
                   messages: [message],
@@ -160,14 +147,13 @@ export async function POST(request: Request) {
                       chatId: id,
                       role: assistantMessage.role,
                       parts: assistantMessage.parts,
-                      attachments:
-                        assistantMessage.experimental_attachments ?? [],
+                      attachments: assistantMessage.experimental_attachments ?? [],
                       createdAt: new Date(),
                     },
                   ],
                 });
-              } catch (_) {
-                console.error('Failed to save chat');
+              } catch (err) {
+                console.error('Failed to save chat', err);
               }
             }
           },
@@ -187,7 +173,8 @@ export async function POST(request: Request) {
         return 'Oops, an error occurred!';
       },
     });
-  } catch (_) {
+  } catch (err) {
+    console.error('[POST ERROR]', err);
     return new Response('An error occurred while processing your request!', {
       status: 500,
     });
@@ -219,6 +206,7 @@ export async function DELETE(request: Request) {
 
     return Response.json(deletedChat, { status: 200 });
   } catch (error) {
+    console.error('[DELETE ERROR]', error);
     return new Response('An error occurred while processing your request!', {
       status: 500,
     });
