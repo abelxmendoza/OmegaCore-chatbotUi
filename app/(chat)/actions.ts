@@ -1,3 +1,13 @@
+// File: app/(chat)/actions.ts
+//
+// Summary:
+// This server-side module handles core actions for the chatbot,
+// including setting the selected model in a cookie, generating 
+// dynamic chat titles based on the user's first message, deleting 
+// trailing messages after a specific point in the conversation, 
+// and updating the visibility status of a chat. It also includes 
+// a test function for debugging the OpenAI provider integration.
+
 'use server';
 
 import { generateText, type UIMessage } from 'ai';
@@ -10,11 +20,13 @@ import {
 import type { VisibilityType } from '@/components/visibility-selector';
 import { myProvider } from '@/lib/ai/providers'; // ✅ using custom provider
 
+// Save the selected chat model to cookies
 export async function saveChatModelAsCookie(model: string) {
   const cookieStore = await cookies();
   cookieStore.set('chat-model', model);
 }
 
+// Generate a chat title based on the user's first message
 export async function generateTitleFromUserMessage({
   message,
 }: {
@@ -27,12 +39,18 @@ export async function generateTitleFromUserMessage({
     - ensure it is not more than 80 characters long
     - the title should be a summary of the user's message
     - do not use quotes or colons`,
-    prompt: JSON.stringify(message),
+    prompt: [
+      {
+        role: message.role,
+        content: message.content,
+      },
+    ],
   });
 
   return title;
 }
 
+// Delete all messages in a chat after a specific message
 export async function deleteTrailingMessages({ id }: { id: string }) {
   const [message] = await getMessageById({ id });
 
@@ -42,6 +60,7 @@ export async function deleteTrailingMessages({ id }: { id: string }) {
   });
 }
 
+// Update visibility of a specific chat (e.g., public, private)
 export async function updateChatVisibility({
   chatId,
   visibility,
@@ -52,16 +71,19 @@ export async function updateChatVisibility({
   await updateChatVisiblityById({ chatId, visibility });
 }
 
-// ✅ Test function for debugging your OpenAI provider
+// ✅ Test function for debugging your OpenAI provider setup
 export async function testOpenAIProvider() {
   const { text } = await generateText({
     model: myProvider.languageModel('title-model'),
     system: 'You are a helpful assistant.',
-    prompt: JSON.stringify({
-      role: 'user',
-      parts: ['How do I train a robot to clean dishes?'],
-    }),
+    prompt: [
+      {
+        role: 'user',
+        content: 'How do I train a robot to clean dishes?',
+      },
+    ],
   });
 
   return text;
 }
+
