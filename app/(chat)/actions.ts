@@ -32,6 +32,26 @@ export async function generateTitleFromUserMessage({
 }: {
   message: UIMessage;
 }) {
+  // Extract string content from message - UIMessage.content can be string or array
+  let content: string;
+  if (typeof message.content === 'string') {
+    content = message.content;
+  } else if (Array.isArray(message.content)) {
+    // Handle array of content parts - map to strings and join
+    const parts = message.content as Array<string | { text?: string; type?: string }>;
+    content = parts
+      .map(part => {
+        if (typeof part === 'string') return part;
+        if (typeof part === 'object' && part !== null && 'text' in part) {
+          return String(part.text || '');
+        }
+        return String(part);
+      })
+      .join(' ');
+  } else {
+    content = String(message.content);
+  }
+
   const { text: title } = await generateText({
     model: myProvider.languageModel('title-model'),
     system: `\n
@@ -39,12 +59,7 @@ export async function generateTitleFromUserMessage({
     - ensure it is not more than 80 characters long
     - the title should be a summary of the user's message
     - do not use quotes or colons`,
-    prompt: [
-      {
-        role: message.role,
-        content: message.content,
-      },
-    ],
+    prompt: content,
   });
 
   return title;
@@ -76,14 +91,8 @@ export async function testOpenAIProvider() {
   const { text } = await generateText({
     model: myProvider.languageModel('title-model'),
     system: 'You are a helpful assistant.',
-    prompt: [
-      {
-        role: 'user',
-        content: 'How do I train a robot to clean dishes?',
-      },
-    ],
+    prompt: 'How do I train a robot to clean dishes?', // ✅ Must also be a plain string
   });
 
   return text;
 }
-

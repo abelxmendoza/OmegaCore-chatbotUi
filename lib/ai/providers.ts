@@ -9,16 +9,31 @@ import type { LanguageModel, LanguageModelV1 } from 'ai';
 import { createXai } from '@ai-sdk/xai';
 
 // Anthropic provider - optional, handle import gracefully for deployment
-// Using conditional require() for optional dependency
-let createAnthropic: any = null;
-try {
-  const anthropicModule = require('@ai-sdk/anthropic');
-  if (anthropicModule && anthropicModule.createAnthropic) {
-    createAnthropic = anthropicModule.createAnthropic;
+// Use dynamic require with string to avoid webpack static analysis
+let anthropicModels: Record<string, any> = {};
+
+// Only try to load Anthropic if API key is set
+if (process.env.ANTHROPIC_API_KEY) {
+  try {
+    // Use Function constructor to create a dynamic require that webpack can't analyze
+    const requireAnthropic = new Function('moduleName', 'return require(moduleName)');
+    // @ts-ignore - dynamic require that may not exist
+    const anthropicModule = requireAnthropic('@ai-sdk/anthropic');
+    if (anthropicModule?.createAnthropic) {
+      const anthropic = anthropicModule.createAnthropic({
+        apiKey: process.env.ANTHROPIC_API_KEY,
+      });
+      anthropicModels = {
+        'claude-3-5-sonnet': anthropic('claude-3-5-sonnet-20241022') as any,
+        'claude-3-opus': anthropic('claude-3-opus-20240229') as any,
+        'claude-3-sonnet': anthropic('claude-3-sonnet-20240229') as any,
+        'claude-3-haiku': anthropic('claude-3-haiku-20240307') as any,
+      };
+    }
+  } catch {
+    // Anthropic not available - this is fine, it's optional
+    anthropicModels = {};
   }
-} catch {
-  // Anthropic not available - this is fine, it's optional
-  createAnthropic = null;
 }
 
 // 🧠 For loading WASM from server
@@ -65,10 +80,6 @@ const xai = createXai({
   apiKey: process.env.XAI_API_KEY,
 });
 
-const anthropic = createAnthropic ? createAnthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-}) : null;
-
 // 🔌 Provider setup using ai SDK
 export const myProvider = customProvider({
   languageModels: {
@@ -87,12 +98,7 @@ export const myProvider = customProvider({
     'grok-2-vision-1212': xai('grok-2-vision-1212'),
 
     // Anthropic Claude models (good for security research) - only if available
-    ...(anthropic ? {
-      'claude-3-5-sonnet': anthropic('claude-3-5-sonnet-20241022') as any,
-      'claude-3-opus': anthropic('claude-3-opus-20240229') as any,
-      'claude-3-sonnet': anthropic('claude-3-sonnet-20240229') as any,
-      'claude-3-haiku': anthropic('claude-3-haiku-20240307') as any,
-    } : {}),
+    ...anthropicModels,
   },
 });
 
