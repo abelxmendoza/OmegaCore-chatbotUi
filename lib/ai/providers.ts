@@ -9,31 +9,29 @@ import type { LanguageModel, LanguageModelV1 } from 'ai';
 import { createXai } from '@ai-sdk/xai';
 
 // Anthropic provider - optional, handle import gracefully for deployment
-// Use dynamic require with string to avoid webpack static analysis
+// Initialize as empty - will be populated at runtime if package is available
 let anthropicModels: Record<string, any> = {};
 
-// Only try to load Anthropic if API key is set
-if (process.env.ANTHROPIC_API_KEY) {
-  try {
-    // Use Function constructor to create a dynamic require that webpack can't analyze
-    const requireAnthropic = new Function('moduleName', 'return require(moduleName)');
-    // @ts-ignore - dynamic require that may not exist
-    const anthropicModule = requireAnthropic('@ai-sdk/anthropic');
-    if (anthropicModule?.createAnthropic) {
-      const anthropic = anthropicModule.createAnthropic({
-        apiKey: process.env.ANTHROPIC_API_KEY,
-      });
-      anthropicModels = {
-        'claude-3-5-sonnet': anthropic('claude-3-5-sonnet-20241022') as any,
-        'claude-3-opus': anthropic('claude-3-opus-20240229') as any,
-        'claude-3-sonnet': anthropic('claude-3-sonnet-20240229') as any,
-        'claude-3-haiku': anthropic('claude-3-haiku-20240307') as any,
-      };
-    }
-  } catch {
-    // Anthropic not available - this is fine, it's optional
-    anthropicModels = {};
+// Try to load Anthropic at runtime (after webpack bundling)
+// This will only work if the package is installed and API key is set
+try {
+  // Use eval to prevent webpack from statically analyzing this require
+  // eslint-disable-next-line no-eval
+  const anthropicModule = eval('require')('@ai-sdk/anthropic');
+  if (anthropicModule?.createAnthropic && process.env.ANTHROPIC_API_KEY) {
+    const anthropic = anthropicModule.createAnthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
+    anthropicModels = {
+      'claude-3-5-sonnet': anthropic('claude-3-5-sonnet-20241022') as any,
+      'claude-3-opus': anthropic('claude-3-opus-20240229') as any,
+      'claude-3-sonnet': anthropic('claude-3-sonnet-20240229') as any,
+      'claude-3-haiku': anthropic('claude-3-haiku-20240307') as any,
+    };
   }
+} catch {
+  // Anthropic not available - this is fine, it's optional
+  anthropicModels = {};
 }
 
 // 🧠 For loading WASM from server

@@ -12,14 +12,15 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
-    // Make @ai-sdk/anthropic optional for webpack
-    if (isServer) {
-      config.externals = config.externals || [];
-      config.externals.push({
-        '@ai-sdk/anthropic': 'commonjs @ai-sdk/anthropic',
-      });
-    }
+  webpack: (config, { webpack }) => {
+    // Make @ai-sdk/anthropic optional - ignore if not available
+    config.plugins = config.plugins || [];
+    config.plugins.push(
+      new webpack.IgnorePlugin({
+        resourceRegExp: /^@ai-sdk\/anthropic$/,
+        contextRegExp: /lib\/ai\/providers/,
+      })
+    );
     return config;
   },
 };
