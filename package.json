@@ -1,7 +1,13 @@
 {
-  "name": "ai-chatbot",
-  "version": "3.0.14",
+  "name": "omega-core-ai",
+  "version": "1.0.0",
   "private": true,
+  "description": "Omega-Core A.I. - High Voltage, Post-Human Precision. A cutting-edge AI chatbot platform for security research.",
+  "author": "abelxmendoza",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abelxmendoza/OmegaCore-chatbotUi"
+  },
   "scripts": {
     "dev": "next dev --turbo",
     "build": "tsx lib/db/migrate && next build",
@@ -19,6 +25,7 @@
     "test": "export PLAYWRIGHT=True && pnpm exec playwright test"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^2.0.42",
     "@ai-sdk/react": "^1.2.8",
     "@ai-sdk/xai": "^1.2.10",
     "@codemirror/lang-javascript": "^6.2.2",
@@ -85,7 +92,7 @@
     "tailwindcss-animate": "^1.0.7",
     "tiktoken": "^1.0.21",
     "usehooks-ts": "^3.1.0",
-    "zod": "^3.23.8"
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

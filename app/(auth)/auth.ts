@@ -8,3 +8,5 @@ export const {
   signIn,
   signOut,
 } = NextAuth(authConfig);
+
+export type UserType = 'regular' | 'guest';

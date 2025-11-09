@@ -2,7 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Omega-Core Cyberpunk Theme Variables */
 :root {
+    --omega-bg: #060606;
+    --omega-panel: #0b0b10;
+    --omega-purple: #9b00ff;
+    --omega-purple-light: #b84dff;
+    --omega-text: #d8d6e4;
+    --omega-dim: #202020;
+    --omega-glow: 0 0 12px rgba(155, 0, 255, 0.7);
+    
     --foreground-rgb: 0, 0, 0;
     --background-start-rgb: 214, 219, 220;
     --background-end-rgb: 255, 255, 255;
@@ -59,38 +68,39 @@
         --sidebar-ring: 217.2 91.2% 59.8%;
     }
     .dark {
-        --background: 240 10% 3.9%;
-        --foreground: 0 0% 98%;
-        --card: 240 10% 3.9%;
-        --card-foreground: 0 0% 98%;
-        --popover: 240 10% 3.9%;
-        --popover-foreground: 0 0% 98%;
-        --primary: 0 0% 98%;
-        --primary-foreground: 240 5.9% 10%;
-        --secondary: 240 3.7% 15.9%;
-        --secondary-foreground: 0 0% 98%;
-        --muted: 240 3.7% 15.9%;
-        --muted-foreground: 240 5% 64.9%;
-        --accent: 240 3.7% 15.9%;
-        --accent-foreground: 0 0% 98%;
-        --destructive: 0 62.8% 30.6%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 240 3.7% 15.9%;
-        --input: 240 3.7% 15.9%;
-        --ring: 240 4.9% 83.9%;
+        /* Omega-Core Cyberpunk Theme - converted to HSL format for Tailwind */
+        --background: 0 0% 2%; /* #060606 */
+        --foreground: 250 20% 85%; /* #d8d6e4 */
+        --card: 240 20% 4%; /* #0b0b10 */
+        --card-foreground: 250 20% 85%;
+        --popover: 240 20% 4%;
+        --popover-foreground: 250 20% 85%;
+        --primary: 280 100% 50%; /* #9b00ff omega purple */
+        --primary-foreground: 0 0% 100%;
+        --secondary: 280 80% 60%; /* lighter purple instead of red */
+        --secondary-foreground: 0 0% 100%;
+        --muted: 0 0% 13%; /* #202020 */
+        --muted-foreground: 250 20% 85%;
+        --accent: 280 100% 50%; /* omega purple */
+        --accent-foreground: 0 0% 100%;
+        --destructive: 280 70% 55%; /* purple variant instead of red */
+        --destructive-foreground: 0 0% 100%;
+        --border: 0 0% 13%; /* #202020 */
+        --input: 0 0% 13%;
+        --ring: 280 100% 50%; /* omega purple */
         --chart-1: 220 70% 50%;
         --chart-2: 160 60% 45%;
         --chart-3: 30 80% 55%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
-        --sidebar-background: 240 5.9% 10%;
-        --sidebar-foreground: 240 4.8% 95.9%;
-        --sidebar-primary: 224.3 76.3% 48%;
+        --sidebar-background: 0 0% 2%;
+        --sidebar-foreground: 250 20% 85%;
+        --sidebar-primary: 280 100% 50%;
         --sidebar-primary-foreground: 0 0% 100%;
-        --sidebar-accent: 240 3.7% 15.9%;
-        --sidebar-accent-foreground: 240 4.8% 95.9%;
-        --sidebar-border: 240 3.7% 15.9%;
-        --sidebar-ring: 217.2 91.2% 59.8%;
+        --sidebar-accent: 0 0% 13%;
+        --sidebar-accent-foreground: 250 20% 85%;
+        --sidebar-border: 0 0% 13%;
+        --sidebar-ring: 280 100% 50%;
     }
 }
 
@@ -101,6 +111,125 @@
 
     body {
         @apply bg-background text-foreground;
+        font-family: var(--font-jetbrains-mono), var(--font-orbitron), var(--font-geist-mono), monospace;
+        background: var(--omega-bg);
+        color: var(--omega-text);
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Omega-Core Background Animation */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+            radial-gradient(circle at 20% 50%, rgba(155, 0, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(184, 77, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 20%, rgba(155, 0, 255, 0.05) 0%, transparent 50%);
+        background-size: 100% 100%;
+        animation: omegaPulse 8s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    @keyframes omegaPulse {
+        0%, 100% {
+            opacity: 0.5;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+    }
+
+    /* Circuitry texture overlay */
+    body::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(155, 0, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(155, 0, 255, 0.03) 1px, transparent 1px);
+        background-size: 50px 50px;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Ensure content is above background effects */
+    body > * {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+/* Omega-Core Cyberpunk Button Styles */
+@layer components {
+    .dark button.bg-primary,
+    .dark button[class*="bg-primary"] {
+        background: linear-gradient(135deg, var(--omega-purple-light), var(--omega-purple)) !important;
+        border: 1px solid var(--omega-purple) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        box-shadow: var(--omega-glow) !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+
+    .dark button.bg-primary:hover,
+    .dark button[class*="bg-primary"]:hover {
+        border-color: var(--omega-purple-light) !important;
+        box-shadow: 0 0 16px rgba(155, 0, 255, 0.9) !important;
+        transform: scale(1.05) !important;
+        filter: brightness(1.2) !important;
+    }
+
+    /* Omega-Core buttons with neon purple outline */
+    .dark button:not(.bg-ghost):not(.bg-link):not(.bg-outline):not(.bg-secondary) {
+        background: linear-gradient(135deg, var(--omega-purple-light), var(--omega-purple)) !important;
+        border: 1px solid var(--omega-purple) !important;
+        color: white !important;
+        border-radius: 8px !important;
+        box-shadow: var(--omega-glow) !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+
+    .dark button:not(.bg-ghost):not(.bg-link):not(.bg-outline):not(.bg-secondary):hover {
+        border-color: var(--omega-purple-light) !important;
+        box-shadow: 0 0 16px rgba(155, 0, 255, 0.9) !important;
+        transform: scale(1.05) !important;
+        filter: brightness(1.2) !important;
+    }
+
+    /* Omega-Core card and panel styles */
+    .dark .card,
+    .dark [class*="card"],
+    .dark [class*="panel"],
+    .dark [class*="Chat"] {
+        background: var(--omega-panel) !important;
+        border: 1px solid var(--omega-dim) !important;
+        box-shadow: var(--omega-glow) !important;
+    }
+
+    /* Omega-Core input styles */
+    .dark input,
+    .dark textarea {
+        background: var(--omega-panel) !important;
+        border: 1px solid var(--omega-dim) !important;
+        color: var(--omega-text) !important;
+    }
+
+    .dark input:focus,
+    .dark textarea:focus {
+        border-color: var(--omega-purple) !important;
+        box-shadow: 0 0 8px rgba(155, 0, 255, 0.5) !important;
+        outline: none !important;
     }
 }
 

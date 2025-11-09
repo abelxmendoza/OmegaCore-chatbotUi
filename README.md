@@ -41,7 +41,7 @@ A cutting-edge AI chatbot platform built with Next.js and the AI SDK, designed f
 ### Prerequisites
 - Node.js 18+ 
 - pnpm (recommended) or npm
-- PostgreSQL database (Vercel Postgres recommended)
+- PostgreSQL database
 - API keys for your chosen LLM providers
 
 ### Installation
@@ -136,7 +136,7 @@ The system prompts are optimized for security research and can be customized in 
 
 - **Framework**: Next.js 15.3 (App Router)
 - **Language**: TypeScript
-- **AI SDK**: Vercel AI SDK v4.3
+- **AI SDK**: AI SDK v4.3
 - **Database**: PostgreSQL with Drizzle ORM
 - **Authentication**: NextAuth.js v5
 - **Styling**: Tailwind CSS with custom cyberpunk theme
@@ -147,16 +147,14 @@ The system prompts are optimized for security research and can be customized in 
 
 ### Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/abelxmendoza/OmegaCore-chatbotUi)
-
-1. Click the button above or connect your GitHub repository to Vercel
+1. Connect your GitHub repository to Vercel
 2. Add environment variables in Vercel dashboard:
    - `AUTH_SECRET` - Generate at https://generate-secret.vercel.app/32
-   - `POSTGRES_URL` - From Vercel Postgres
+   - `POSTGRES_URL` - Your PostgreSQL connection string
    - `OPENAI_API_KEY` - Required
    - `XAI_API_KEY` - Optional (for Grok)
    - `ANTHROPIC_API_KEY` - Optional (for Claude)
-   - `BLOB_READ_WRITE_TOKEN` - Optional (for file uploads)
+   - `BLOB_READ_WRITE_TOKEN` - Optional (for file uploads, if using Vercel Blob)
 
 3. Deploy!
 
@@ -220,9 +218,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 🙏 Acknowledgments
 
-- Built with [Vercel AI SDK](https://sdk.vercel.ai)
+- Built with [AI SDK](https://sdk.vercel.ai) for LLM integration
 - UI components from [Radix UI](https://www.radix-ui.com)
 - Styling with [Tailwind CSS](https://tailwindcss.com)
+- Framework: [Next.js](https://nextjs.org)
 
 ---
 

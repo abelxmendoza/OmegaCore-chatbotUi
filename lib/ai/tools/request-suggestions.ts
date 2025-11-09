@@ -49,10 +49,15 @@ export const requestSuggestions = ({
       });
 
       for await (const element of elementStream) {
+        const elem = element as {
+          originalSentence: string;
+          suggestedSentence: string;
+          description: string;
+        };
         const suggestion = {
-          originalText: element.originalSentence,
-          suggestedText: element.suggestedSentence,
-          description: element.description,
+          originalText: elem.originalSentence,
+          suggestedText: elem.suggestedSentence,
+          description: elem.description,
           id: generateUUID(),
           documentId: documentId,
           isResolved: false,

@@ -12,6 +12,7 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-geist)'],
         mono: ['var(--font-geist-mono)'],
+        orbitron: ['var(--font-orbitron)'],
       },
       screens: {
         'toast-mobile': '600px',
@@ -72,6 +73,18 @@ const config: Config = {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        omega: {
+          bg: '#060606',
+          panel: '#0b0b10',
+          purple: '#9b00ff',
+          'purple-light': '#b84dff',
+          text: '#d8d6e4',
+          dim: '#202020',
+        },
+      },
+      boxShadow: {
+        omega: '0 0 12px rgba(155, 0, 255, 0.7)',
+        'omega-purple': '0 0 16px rgba(155, 0, 255, 0.9)',
       },
     },
   },
