@@ -5,7 +5,8 @@ import {
   smoothStream,
   streamText,
 } from 'ai';
-import { auth, type UserType } from '@/app/(auth)/auth';
+import { auth } from '@/app/(auth)/auth';
+import type { UserType } from '@/app/(auth)/auth';
 import { type RequestHints, systemPrompt } from '@/lib/ai/prompts';
 import {
   deleteChatById,
@@ -48,10 +49,10 @@ export async function POST(request: Request) {
       return new Response('Unauthorized', { status: 401 });
     }
 
-    const userType: UserType = session.user.type;
+    const userType: UserType = session.user.type as UserType;
 
     const messageCount = await getMessageCountByUserId({
-      id: session.user.id,
+      id: session.user.id as string,
       differenceInHours: 24,
     });
 
@@ -67,9 +68,9 @@ export async function POST(request: Request) {
     if (!chat) {
       const title = await generateTitleFromUserMessage({ message });
       console.log('[CREATE CHAT]', id, title);
-      await saveChat({ id, userId: session.user.id, title });
+      await saveChat({ id, userId: session.user.id as string, title });
     } else {
-      if (chat.userId !== session.user.id) {
+      if (chat.userId !== (session.user.id as string)) {
         return new Response('Forbidden', { status: 403 });
       }
     }
@@ -83,13 +84,13 @@ export async function POST(request: Request) {
     });
 
     const location = await geolocation(request);
-    const { longitude = 0, latitude = 0, city = '', country = '' } = location ?? {};
+    const { longitude, latitude, city = '', country = '' } = location ?? {};
 
     const requestHints: RequestHints = {
-      longitude,
-      latitude,
-      city,
-      country,
+      longitude: (longitude ?? 0) as RequestHints['longitude'],
+      latitude: (latitude ?? 0) as RequestHints['latitude'],
+      city: (city ?? '') as RequestHints['city'],
+      country: (country ?? '') as RequestHints['country'],
     };
 
     await saveMessages({
@@ -198,7 +199,7 @@ export async function DELETE(request: Request) {
   try {
     const chat = await getChatById({ id });
 
-    if (chat.userId !== session.user.id) {
+    if (chat.userId !== (session.user.id as string)) {
       return new Response('Forbidden', { status: 403 });
     }
 
