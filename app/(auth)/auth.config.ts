@@ -66,18 +66,21 @@ export const authConfig = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.type = user.type;
+        token.id = user.id as string;
+        // Type assertion for user.type - it's added in authorize() callbacks
+        const userWithType = user as { type?: 'regular' | 'guest' };
+        token.type = (userWithType.type ?? 'regular') as 'regular' | 'guest';
       }
       return token;
     },
 
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id;
-        session.user.type = token.type;
+        session.user.id = token.id as string;
+        session.user.type = token.type as 'regular' | 'guest';
       }
       return session;
     },
   },
 } satisfies NextAuthConfig;
+
