@@ -12,26 +12,36 @@ import { createXai } from '@ai-sdk/xai';
 // Initialize as empty - will be populated at runtime if package is available
 let anthropicModels: Record<string, any> = {};
 
-// Try to load Anthropic at runtime (after webpack bundling)
-// This will only work if the package is installed and API key is set
-try {
-  // Use eval to prevent webpack from statically analyzing this require
-  // eslint-disable-next-line no-eval
-  const anthropicModule = eval('require')('@ai-sdk/anthropic');
-  if (anthropicModule?.createAnthropic && process.env.ANTHROPIC_API_KEY) {
-    const anthropic = anthropicModule.createAnthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    });
-    anthropicModels = {
-      'claude-3-5-sonnet': anthropic('claude-3-5-sonnet-20241022') as any,
-      'claude-3-opus': anthropic('claude-3-opus-20240229') as any,
-      'claude-3-sonnet': anthropic('claude-3-sonnet-20240229') as any,
-      'claude-3-haiku': anthropic('claude-3-haiku-20240307') as any,
-    };
+// Only try to load Anthropic if API key is set (avoids webpack trying to resolve it)
+// This check happens at module load time, but the require is deferred
+if (typeof process !== 'undefined' && process.env?.ANTHROPIC_API_KEY) {
+  try {
+    // Use dynamic require that webpack can't statically analyze
+    // The IgnorePlugin in next.config.ts tells webpack to ignore this module
+    const requireFunc = typeof require !== 'undefined' ? require : null;
+    if (requireFunc) {
+      // @ts-ignore - dynamic require that may not exist
+      const anthropicModule = requireFunc('@ai-sdk/anthropic');
+      if (anthropicModule?.createAnthropic) {
+        const anthropic = anthropicModule.createAnthropic({
+          apiKey: process.env.ANTHROPIC_API_KEY,
+        });
+        anthropicModels = {
+          'claude-3-5-sonnet': anthropic('claude-3-5-sonnet-20241022') as any,
+          'claude-3-opus': anthropic('claude-3-opus-20240229') as any,
+          'claude-3-sonnet': anthropic('claude-3-sonnet-20240229') as any,
+          'claude-3-haiku': anthropic('claude-3-haiku-20240307') as any,
+        };
+      }
+    }
+  } catch (error) {
+    // Anthropic not available - this is fine, it's optional
+    // Silently fail in production
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('Anthropic provider not available:', error);
+    }
+    anthropicModels = {};
   }
-} catch {
-  // Anthropic not available - this is fine, it's optional
-  anthropicModels = {};
 }
 
 // 🧠 For loading WASM from server
@@ -44,11 +54,18 @@ import { init, encoding_for_model } from 'tiktoken/init';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// 💡 Initialize tiktoken with local WASM file
-await init((imports) =>
-  fs.readFile(path.join(__dirname, '../../public/tiktoken/tiktoken_bg.wasm'))
-    .then((wasmBuffer) => WebAssembly.instantiate(wasmBuffer, imports))
-);
+// 💡 Initialize tiktoken with local WASM file - wrapped in try/catch for production safety
+let tiktokenInitialized = false;
+try {
+  await init((imports) =>
+    fs.readFile(path.join(__dirname, '../../public/tiktoken/tiktoken_bg.wasm'))
+      .then((wasmBuffer) => WebAssembly.instantiate(wasmBuffer, imports))
+  );
+  tiktokenInitialized = true;
+} catch (error) {
+  console.error('Failed to initialize tiktoken:', error);
+  // Will fall back to client-side initialization if needed
+}
 
 // 🧠 Create a tokenizer factory for any GPT model
 function createTokenizer(modelName: 'gpt-4' | 'gpt-3.5-turbo') {
