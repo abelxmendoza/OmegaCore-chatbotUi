@@ -6,7 +6,7 @@ import {
   streamText,
 } from 'ai';
 import { auth } from '@/app/(auth)/auth';
-import type { UserType } from '@/app/(auth)/auth';
+import type { UserType } from '@/lib/ai/entitlements';
 import { type RequestHints, systemPrompt } from '@/lib/ai/prompts';
 import {
   deleteChatById,

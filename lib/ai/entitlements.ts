@@ -1,5 +1,7 @@
-import type { UserType } from '@/app/(auth)/auth';
 import type { ChatModel } from './models';
+
+// Export UserType here for easier imports across the app
+export type UserType = 'regular' | 'guest';
 
 interface Entitlements {
   maxMessagesPerDay: number;
@@ -12,7 +14,12 @@ export const entitlementsByUserType: Record<UserType, Entitlements> = {
    */
   guest: {
     maxMessagesPerDay: 20,
-    availableChatModelIds: ['chat-model', 'chat-model-reasoning'],
+    availableChatModelIds: [
+      'chat-model',
+      'chat-model-reasoning',
+      'grok-beta', // More permissive for security research
+      'claude-3-haiku', // Fast and affordable
+    ],
   },
 
   /*
@@ -20,7 +27,16 @@ export const entitlementsByUserType: Record<UserType, Entitlements> = {
    */
   regular: {
     maxMessagesPerDay: 100,
-    availableChatModelIds: ['chat-model', 'chat-model-reasoning'],
+    availableChatModelIds: [
+      'chat-model',
+      'chat-model-reasoning',
+      'grok-beta', // Recommended for pen testing
+      'grok-2-1212',
+      'claude-3-5-sonnet', // Excellent for security research
+      'claude-3-opus',
+      'claude-3-sonnet',
+      'claude-3-haiku',
+    ],
   },
 
   /*
