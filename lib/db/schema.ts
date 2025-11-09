@@ -34,7 +34,7 @@ export const chat = pgTable('Chat', {
 export type Chat = InferSelectModel<typeof chat>;
 
 // DEPRECATED: The following schema is deprecated and will be removed in the future.
-// Read the migration guide at https://github.com/vercel/ai-chatbot/blob/main/docs/04-migrate-to-parts.md
+// Migration guide: See README.md for database setup instructions
 export const messageDeprecated = pgTable('Message', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   chatId: uuid('chatId')
@@ -61,7 +61,7 @@ export const message = pgTable('Message_v2', {
 export type DBMessage = InferSelectModel<typeof message>;
 
 // DEPRECATED: The following schema is deprecated and will be removed in the future.
-// Read the migration guide at https://github.com/vercel/ai-chatbot/blob/main/docs/04-migrate-to-parts.md
+// Migration guide: See README.md for database setup instructions
 export const voteDeprecated = pgTable(
   'Vote',
   {
