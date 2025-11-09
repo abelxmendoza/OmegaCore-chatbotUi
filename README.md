@@ -1,62 +1,231 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
-</a>
+# OMEGA-CORE A.I.
 
-<p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
-</p>
+> **High Voltage, Post-Human Precision.**
 
-<p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
-</p>
-<br/>
+A cutting-edge AI chatbot platform built with Next.js and the AI SDK, designed for security researchers, penetration testers, and cybersecurity professionals. Omega-Core features a dark cyberpunk aesthetic with purple neon accents and supports multiple LLM providers optimized for security research.
 
-## Features
+![Omega-Core Theme](https://img.shields.io/badge/Theme-Cyberpunk-purple?style=flat-square)
+![Next.js](https://img.shields.io/badge/Next.js-15.3-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?style=flat-square&logo=typescript)
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://sdk.vercel.ai/docs)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports xAI (default), OpenAI, Fireworks, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+## 🎯 Features
 
-## Model Providers
+### Core Capabilities
+- **Multi-Provider LLM Support**: OpenAI GPT-4, xAI Grok, and Anthropic Claude models
+- **Security Research Focus**: Optimized prompts and model selection for penetration testing and cybersecurity research
+- **Cyberpunk UI**: Dark theme with purple neon accents, circuitry textures, and particle animations
+- **Real-time Streaming**: Fast, responsive chat experience with streaming responses
+- **Chat History**: Persistent conversation history with search and organization
+- **File Uploads**: Support for document analysis and processing
+- **Artifact Generation**: Code, documents, and spreadsheet creation tools
 
-This template ships with [xAI](https://x.ai) `grok-2-1212` as the default chat model. However, with the [AI SDK](https://sdk.vercel.ai/docs), you can switch LLM providers to [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://sdk.vercel.ai/providers/ai-sdk-providers) with just a few lines of code.
+### LLM Providers
 
-## Deploy Your Own
+#### OpenAI (Default)
+- GPT-4 - Primary chat model
+- GPT-4 Reasoning - Advanced reasoning capabilities
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+#### xAI Grok (Recommended for Security Research)
+- Grok Beta - More permissive for security research
+- Grok-2 - Latest model
+- Grok-2 Vision - Vision-capable version
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET&envDescription=Generate%20a%20random%20secret%20to%20use%20for%20authentication&envLink=https%3A%2F%2Fgenerate-secret.vercel.app%2F32&project-name=my-awesome-chatbot&repository-name=my-awesome-chatbot&demo-title=AI%20Chatbot&demo-description=An%20Open-Source%20AI%20Chatbot%20Template%20Built%20With%20Next.js%20and%20the%20AI%20SDK%20by%20Vercel&demo-url=https%3A%2F%2Fchat.vercel.ai&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22ai%22%2C%22productSlug%22%3A%22grok%22%2C%22integrationSlug%22%3A%22xai%22%7D%2C%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22neon%22%2C%22integrationSlug%22%3A%22neon%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
+#### Anthropic Claude (Optional)
+- Claude 3.5 Sonnet - Excellent for technical security discussions
+- Claude 3 Opus - Most capable for complex analysis
+- Claude 3 Sonnet - Balanced performance
+- Claude 3 Haiku - Fast and affordable
 
-## Running locally
+## 🚀 Quick Start
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+### Prerequisites
+- Node.js 18+ 
+- pnpm (recommended) or npm
+- PostgreSQL database (Vercel Postgres recommended)
+- API keys for your chosen LLM providers
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
+### Installation
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/abelxmendoza/OmegaCore-chatbotUi.git
+   cd OmegaCore-chatbotUi
+   ```
+
+2. **Install dependencies**
+   ```bash
+   pnpm install
+   # or
+   npm install
+   ```
+
+3. **Set up environment variables**
+   
+   Create a `.env.local` file with the following:
+   ```env
+   # Authentication
+   AUTH_SECRET=your-random-secret-here
+   NEXTAUTH_SECRET=your-random-secret-here
+   
+   # Database
+   POSTGRES_URL=your-postgres-connection-string
+   
+   # OpenAI (Required for GPT-4)
+   OPENAI_API_KEY=sk-...
+   
+   # xAI (Optional - for Grok models)
+   XAI_API_KEY=your-xai-key
+   
+   # Anthropic (Optional - for Claude models)
+   ANTHROPIC_API_KEY=sk-ant-...
+   
+   # Vercel Blob Storage (Optional - for file uploads)
+   BLOB_READ_WRITE_TOKEN=vercel_blob_...
+   ```
+
+4. **Run database migrations**
+   ```bash
+   pnpm db:migrate
+   ```
+
+5. **Start the development server**
+   ```bash
+   pnpm dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🎨 Theme Customization
+
+Omega-Core features a custom cyberpunk theme with the following color palette:
+
+- **Background**: `#060606` (Matte black)
+- **Panels**: `#0b0b10` (Dark purple-tinted)
+- **Primary Accent**: `#9b00ff` (Neon purple)
+- **Text**: `#d8d6e4` (Light metallic gray)
+- **Fonts**: JetBrains Mono, Orbitron
+
+The theme includes:
+- Animated background with purple glow effects
+- Circuitry texture overlay
+- Neon purple button gradients
+- Smooth hover animations
+
+## 🔧 Configuration
+
+### Model Selection
+
+Models are configured in `lib/ai/models.ts` and entitlements in `lib/ai/entitlements.ts`. 
+
+**Guest users** can access:
+- GPT-4 models
+- Grok Beta
+- Claude 3 Haiku
+
+**Registered users** have access to all models including premium options.
+
+### Security Research Prompts
+
+The system prompts are optimized for security research and can be customized in `lib/ai/prompts.ts`. The default prompt emphasizes:
+- Ethical hacking and penetration testing
+- Security vulnerability analysis
+- Tool development for security research
+- Educational security content
+
+## 📦 Tech Stack
+
+- **Framework**: Next.js 15.3 (App Router)
+- **Language**: TypeScript
+- **AI SDK**: Vercel AI SDK v4.3
+- **Database**: PostgreSQL with Drizzle ORM
+- **Authentication**: NextAuth.js v5
+- **Styling**: Tailwind CSS with custom cyberpunk theme
+- **UI Components**: Radix UI
+- **Fonts**: JetBrains Mono, Orbitron, Geist
+
+## 🚢 Deployment
+
+### Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/abelxmendoza/OmegaCore-chatbotUi)
+
+1. Click the button above or connect your GitHub repository to Vercel
+2. Add environment variables in Vercel dashboard:
+   - `AUTH_SECRET` - Generate at https://generate-secret.vercel.app/32
+   - `POSTGRES_URL` - From Vercel Postgres
+   - `OPENAI_API_KEY` - Required
+   - `XAI_API_KEY` - Optional (for Grok)
+   - `ANTHROPIC_API_KEY` - Optional (for Claude)
+   - `BLOB_READ_WRITE_TOKEN` - Optional (for file uploads)
+
+3. Deploy!
+
+### Manual Deployment
 
 ```bash
-pnpm install
-pnpm dev
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+## 🛠️ Development
+
+### Available Scripts
+
+```bash
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm start         # Start production server
+pnpm lint          # Run linter
+pnpm db:migrate    # Run database migrations
+pnpm db:studio     # Open Drizzle Studio
+```
+
+### Project Structure
+
+```
+├── app/                    # Next.js app directory
+│   ├── (auth)/            # Authentication pages
+│   ├── (chat)/            # Chat interface and API routes
+│   └── layout.tsx         # Root layout with theme
+├── components/            # React components
+│   ├── chat-header.tsx    # Header with Omega-Core branding
+│   └── app-sidebar.tsx    # Sidebar with branding
+├── lib/
+│   ├── ai/                # AI provider configuration
+│   │   ├── providers.ts   # Multi-provider setup
+│   │   ├── models.ts      # Available models
+│   │   └── prompts.ts    # System prompts
+│   └── db/               # Database queries and schema
+└── types/                 # TypeScript type definitions
+```
+
+## 🔐 Security & Privacy
+
+- All API keys are stored securely as environment variables
+- User authentication via NextAuth.js with JWT sessions
+- Database connections use SSL
+- Guest mode available for anonymous usage
+- Rate limiting per user type
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 🙏 Acknowledgments
+
+- Built with [Vercel AI SDK](https://sdk.vercel.ai)
+- UI components from [Radix UI](https://www.radix-ui.com)
+- Styling with [Tailwind CSS](https://tailwindcss.com)
+
+---
+
+**Omega-Core A.I.** - *High Voltage, Post-Human Precision.*
+
+For questions or support, open an issue on GitHub.
